@@ -474,12 +474,22 @@ def main():
     # Save the original engine's normal output
     # --------------------------------------------------------------
 
-    engine.save_results(
-        final,
-        scored,
-        all_data,
-        members
-    )
+    # Save the final score file directly.
+# This avoids relying on the original save_results() function,
+# whose argument structure is different.
+
+original_final = DATA / (
+    "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
+)
+
+final.to_csv(
+    original_final,
+    index=False,
+    encoding="utf-8-sig"
+)
+
+print("\nFinal score file saved:")
+print(original_final)
 
     original_final = DATA / (
         "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
