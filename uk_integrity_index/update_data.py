@@ -200,10 +200,9 @@ def build_mp_population(register_data):
     # 1. Historical MPs at the start of the current Parliament
     # --------------------------------------------------------------
 
-    historical_records = get_historical_mps(
-        "2024-07-10T00:00:00"
-    )
-
+   historical_records = get_historical_mps(
+    "2024-07-10"
+)
     for record in historical_records:
 
         member = extract_member_details(record)
