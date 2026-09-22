@@ -530,9 +530,9 @@ latest = max(
     register["publishedDate"]
     for register in registers
 )
-    last_update = DATA / "last_update.txt"
+last_update = DATA / "last_update.txt"
 
-    last_update.write_text(
+last_update.write_text(
         "Latest Parliament register: "
         + latest
         + "\n"
@@ -548,30 +548,29 @@ latest = max(
         encoding="utf-8"
     )
 
-    print("\n" + "=" * 70)
-    print("AUTOMATIC UPDATE COMPLETE")
-    print("=" * 70)
+print("\n" + "=" * 70)
+print("AUTOMATIC UPDATE COMPLETE")
+print("=" * 70)
 
-    print(
-        "Registers processed:",
-        len(registers)
-    )
+print(
+    "Registers processed:",
+    len(registers)
+)
 
-    print(
-        "Latest register:",
-        latest
-    )
+print(
+    "Latest register:",
+    latest
+)
 
-    print(
-        "MPs scored:",
-        len(final)
-    )
+print(
+    "MPs scored:",
+    len(final)
+)
 
-    print(
-        "Website scores:",
-        website_scores
-    )
-
+print(
+    "Website scores:",
+    website_scores
+)
 
 if __name__ == "__main__":
     main()
