@@ -178,16 +178,16 @@ def extract_member_details(record):
 
 def build_mp_population(register_data):
     """
-    Build the MP population needed by the original scoring engine.
+    Build the complete MP population for the period covered by
+    the downloaded registers.
 
-    Population is constructed from:
-
-    1. MPs present at the beginning of the current Parliament.
+    The population is built from:
+    1. MPs at the beginning of the current Parliament.
     2. Current Commons MPs.
-    3. MPs appearing in the downloaded registers.
+    3. Every MP appearing in the downloaded register data.
 
-    This catches MPs who subsequently left Parliament as well as
-    MPs who entered Parliament later.
+    This means MPs who subsequently left Parliament are retained,
+    while MPs who entered later are also captured.
     """
 
     print("\n" + "=" * 70)
@@ -197,12 +197,13 @@ def build_mp_population(register_data):
     population = {}
 
     # --------------------------------------------------------------
-    # 1. Historical MPs at the start of the current Parliament
+    # 1. MPs at the beginning of the current Parliament
     # --------------------------------------------------------------
 
-   historical_records = get_historical_mps(
-    "2024-07-10"
-)
+    historical_records = get_historical_mps(
+        "2024-07-10"
+    )
+
     for record in historical_records:
 
         member = extract_member_details(record)
@@ -213,12 +214,12 @@ def build_mp_population(register_data):
             population[str(member_id)] = member
 
     print(
-        "\nHistorical MPs added:",
+        "\nMPs from July 2024 historical population:",
         len(population)
     )
 
     # --------------------------------------------------------------
-    # 2. Current MPs
+    # 2. Current Commons MPs
     # --------------------------------------------------------------
 
     current_records = get_current_mps()
@@ -238,8 +239,12 @@ def build_mp_population(register_data):
     )
 
     # --------------------------------------------------------------
-    # 3. MPs appearing in the actual registers
+    # 3. Every MP appearing in every downloaded register
     # --------------------------------------------------------------
+
+    print(
+        "\nScanning all downloaded register records for MPs..."
+    )
 
     if isinstance(register_data, pd.DataFrame):
 
@@ -258,71 +263,80 @@ def build_mp_population(register_data):
                 id_column = column
                 break
 
-        if id_column is not None:
+        if id_column is None:
 
-            print(
-                "\nAdding MPs found directly in register data..."
+            raise RuntimeError(
+                "SAFETY STOP: Could not find an MP ID column "
+                "in the downloaded register data."
             )
 
-            name_column = None
+        name_column = None
 
-            for column in [
-                "Member",
-                "Member Name",
-                "Name"
-            ]:
+        for column in [
+            "Member",
+            "Member Name",
+            "Name"
+        ]:
 
-                if column in register_data.columns:
-                    name_column = column
-                    break
+            if column in register_data.columns:
+                name_column = column
+                break
 
-            party_column = None
+        party_column = None
 
-            for column in [
-                "Party"
-            ]:
+        if "Party" in register_data.columns:
+            party_column = "Party"
 
-                if column in register_data.columns:
-                    party_column = column
-                    break
+        register_mps = 0
 
-            for _, row in register_data.iterrows():
+        for _, row in register_data.iterrows():
 
-                raw_id = row[id_column]
+            raw_id = row[id_column]
 
-                if pd.isna(raw_id):
-                    continue
+            if pd.isna(raw_id):
+                continue
 
-                member_id = str(raw_id)
+            member_id = str(raw_id)
 
-                if member_id not in population:
+            if member_id not in population:
 
-                    name = ""
+                name = ""
 
-                    if name_column is not None:
-                        if not pd.isna(row[name_column]):
-                            name = str(row[name_column])
+                if name_column is not None:
 
-                    party = ""
+                    if not pd.isna(row[name_column]):
+                        name = str(row[name_column])
 
-                    if party_column is not None:
-                        if not pd.isna(row[party_column]):
-                            party = str(row[party_column])
+                party = ""
 
-                    population[member_id] = {
-                        "Mnis Id": raw_id,
-                        "Member": name,
-                        "Party": party
-                    }
+                if party_column is not None:
+
+                    if not pd.isna(row[party_column]):
+                        party = str(row[party_column])
+
+                population[member_id] = {
+                    "Mnis Id": raw_id,
+                    "Member": name,
+                    "Party": party
+                }
+
+                register_mps += 1
+
+        print(
+            "Additional MPs found in register records:",
+            register_mps
+        )
+
+    # --------------------------------------------------------------
+    # Final population
+    # --------------------------------------------------------------
 
     print(
-        "\nFinal MP population:",
+        "\nFINAL MP POPULATION:",
         len(population)
     )
 
     return list(population.values())
-
-
 def main():
 
     print("=" * 70)
