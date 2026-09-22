@@ -413,37 +413,58 @@ def main():
         all_data
     )
 
-final = engine.build_final_scores(
-scored,
-members
-)
+    final = engine.build_final_scores(
+        scored,
+        members
+    )
 
-# --------------------------------------------------------------
-# Final safety checks
-# --------------------------------------------------------------
+    # --------------------------------------------------------------
+    # Final safety checks
+    # --------------------------------------------------------------
 
 print("\n" + "=" * 70)
 print("FINAL DATA SAFETY CHECK")
 print("=" * 70)
 
 print(
-"Final MP rows:",
-len(final)
+    "Final MP rows:",
+    len(final)
 )
 
 if len(final) < 400:
-
-raise RuntimeError(
-"SAFETY STOP: Final score file contains fewer than "
-"400 MPs. Existing website data has NOT been replaced."
-)
+    raise RuntimeError(
+        "SAFETY STOP: Final score file contains fewer than "
+        "400 MPs. Existing website data has NOT been replaced."
+    )
 
 required_columns = [
-"Mnis Id",
-"Member",
-"Final Score",
-"Grade"
+    "Mnis Id",
+    "Member",
+    "Final Score",
+    "Grade"
 ]
+
+missing = [
+    column
+    for column in required_columns
+    if column not in final.columns
+]
+
+if missing:
+    raise RuntimeError(
+        "SAFETY STOP: Required columns are missing: "
+        + ", ".join(missing)
+    )
+
+if final["Mnis Id"].duplicated().any():
+    raise RuntimeError(
+        "SAFETY STOP: Duplicate MP IDs were found in final data."
+    )
+
+if final["Member"].isna().any():
+    raise RuntimeError(
+        "SAFETY STOP: Missing MP names were found in final data."
+    )
 
 missing = [
 column
