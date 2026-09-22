@@ -491,10 +491,6 @@ final.to_csv(
 print("\nFinal score file saved:")
 print(original_final)
 
-    original_final = DATA / (
-        "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
-    )
-
     website_scores = DATA / "scores.csv"
 
     if not original_final.exists():
