@@ -413,176 +413,176 @@ def main():
         all_data
     )
 
-     final = engine.build_final_scores(
-        scored,
-        members
-    )
+final = engine.build_final_scores(
+scored,
+members
+)
 
-    # --------------------------------------------------------------
-    # Final safety checks
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Final safety checks
+# --------------------------------------------------------------
 
-    print("\n" + "=" * 70)
-    print("FINAL DATA SAFETY CHECK")
-    print("=" * 70)
+print("\n" + "=" * 70)
+print("FINAL DATA SAFETY CHECK")
+print("=" * 70)
 
-    print(
-        "Final MP rows:",
-        len(final)
-    )
+print(
+"Final MP rows:",
+len(final)
+)
 
-    if len(final) < 400:
+if len(final) < 400:
 
-        raise RuntimeError(
-            "SAFETY STOP: Final score file contains fewer than "
-            "400 MPs. Existing website data has NOT been replaced."
-        )
+raise RuntimeError(
+"SAFETY STOP: Final score file contains fewer than "
+"400 MPs. Existing website data has NOT been replaced."
+)
 
-    required_columns = [
-        "Mnis Id",
-        "Member",
-        "Final Score",
-        "Grade"
-    ]
+required_columns = [
+"Mnis Id",
+"Member",
+"Final Score",
+"Grade"
+]
 
-    missing = [
-        column
-        for column in required_columns
-        if column not in final.columns
-    ]
+missing = [
+column
+for column in required_columns
+if column not in final.columns
+]
 
-    if missing:
+if missing:
 
-        raise RuntimeError(
-            "SAFETY STOP: Required columns are missing: "
-            + ", ".join(missing)
-        )
+raise RuntimeError(
+"SAFETY STOP: Required columns are missing: "
++ ", ".join(missing)
+)
 
-    if final["Mnis Id"].duplicated().any():
+if final["Mnis Id"].duplicated().any():
 
-        raise RuntimeError(
-            "SAFETY STOP: Duplicate MP IDs were found in final data."
-        )
+raise RuntimeError(
+"SAFETY STOP: Duplicate MP IDs were found in final data."
+)
 
-    if final["Member"].isna().any():
+if final["Member"].isna().any():
 
-        raise RuntimeError(
-            "SAFETY STOP: Missing MP names were found in final data."
-        )
+raise RuntimeError(
+"SAFETY STOP: Missing MP names were found in final data."
+)
 
-    # --------------------------------------------------------------
-    # Save the original engine's normal output
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Save the original engine's normal output
+# --------------------------------------------------------------
 
-    # Save the final score file directly.
-    # This avoids relying on the original save_results() function,
-    # whose argument structure is different.
+# Save the final score file directly.
+# This avoids relying on the original save_results() function,
+# whose argument structure is different.
 
-    original_final = DATA / (
-        "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
-    )
+original_final = DATA / (
+"UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
+)
 
-    final.to_csv(
-        original_final,
-        index=False,
-        encoding="utf-8-sig"
-    )
+final.to_csv(
+original_final,
+index=False,
+encoding="utf-8-sig"
+)
 
-    print("\nFinal score file saved:")
-    print(original_final)
+print("\nFinal score file saved:")
+print(original_final)
 
-    website_scores = DATA / "scores.csv"
+website_scores = DATA / "scores.csv"
 
-    if not original_final.exists():
+if not original_final.exists():
 
-        raise RuntimeError(
-            "SAFETY STOP: Original final CSV was not created."
-        )
+raise RuntimeError(
+"SAFETY STOP: Original final CSV was not created."
+)
 
-    shutil.copy2(
-        original_final,
-        website_scores
-    )
+shutil.copy2(
+original_final,
+website_scores
+)
 
-    print(
-        "\nWebsite scores updated successfully:"
-    )
+print(
+"\nWebsite scores updated successfully:"
+)
 
-    print(
-        website_scores
-    )
+print(
+website_scores
+)
 
-    # --------------------------------------------------------------
-    # Update interests file
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Update interests file
+# --------------------------------------------------------------
 
-    interests_file = DATA / "interests.csv.gz"
+interests_file = DATA / "interests.csv.gz"
 
-    all_data.to_csv(
-        interests_file,
-        index=False,
-        compression="gzip"
-    )
+all_data.to_csv(
+interests_file,
+index=False,
+compression="gzip"
+)
 
-    print(
-        "\nInterests file updated:"
-    )
+print(
+"\nInterests file updated:"
+)
 
-    print(
-        interests_file
-    )
+print(
+interests_file
+)
 
-    # --------------------------------------------------------------
-    # Update timestamp
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Update timestamp
+# --------------------------------------------------------------
 
-    latest = max(
-        register["publishedDate"]
-        for register in registers
-    )
+latest = max(
+register["publishedDate"]
+for register in registers
+)
 
-    last_update = DATA / "last_update.txt"
+last_update = DATA / "last_update.txt"
 
-    last_update.write_text(
-        "Latest Parliament register: "
-        + latest
-        + "\n"
-        + "Registers processed: "
-        + str(len(registers))
-        + "\n"
-        + "MPs scored: "
-        + str(len(final))
-        + "\n"
-        + "Updated automatically: "
-        + datetime.now(timezone.utc).isoformat()
-        + "\n",
-        encoding="utf-8"
-    )
+last_update.write_text(
+"Latest Parliament register: "
++ latest
++ "\n"
++ "Registers processed: "
++ str(len(registers))
++ "\n"
++ "MPs scored: "
++ str(len(final))
++ "\n"
++ "Updated automatically: "
++ datetime.now(timezone.utc).isoformat()
++ "\n",
+encoding="utf-8"
+)
 
-    print("\n" + "=" * 70)
-    print("AUTOMATIC UPDATE COMPLETE")
-    print("=" * 70)
+print("\n" + "=" * 70)
+print("AUTOMATIC UPDATE COMPLETE")
+print("=" * 70)
 
-    print(
-        "Registers processed:",
-        len(registers)
-    )
+print(
+"Registers processed:",
+len(registers)
+)
 
-    print(
-        "Latest register:",
-        latest
-    )
+print(
+"Latest register:",
+latest
+)
 
-    print(
-        "MPs scored:",
-        len(final)
-    )
+print(
+"MPs scored:",
+len(final)
+)
 
-    print(
-        "Website scores:",
-        website_scores
-    )
+print(
+"Website scores:",
+website_scores
+)
 
 
 if __name__ == "__main__":
-    main()
+main()
