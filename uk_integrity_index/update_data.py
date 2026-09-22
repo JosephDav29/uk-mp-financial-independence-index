@@ -413,7 +413,7 @@ def main():
         all_data
     )
 
-    final = engine.build_final_scores(
+     final = engine.build_final_scores(
         scored,
         members
     )
@@ -474,65 +474,76 @@ def main():
     # Save the original engine's normal output
     # --------------------------------------------------------------
 
-# Save the final score file directly.
-# This avoids relying on the original save_results() function,
-# whose argument structure is different.
+    # Save the final score file directly.
+    # This avoids relying on the original save_results() function,
+    # whose argument structure is different.
 
-original_final = DATA / (
-    "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
-)
-
-final.to_csv(
-    original_final,
-    index=False,
-    encoding="utf-8-sig"
-)
-
-print("\nFinal score file saved:")
-print(original_final)
-
-website_scores = DATA / "scores.csv"
-
-if not original_final.exists():
-    raise RuntimeError(
-        "SAFETY STOP: Original final CSV was not created."
+    original_final = DATA / (
+        "UK_MP_FINANCIAL_INTEGRITY_FINAL_JULY_2024_ONWARDS.csv"
     )
-shutil.copy2(
-    original_final,
-    website_scores
-)
 
-print(
-    "\nWebsite scores updated successfully:"
-)
+    final.to_csv(
+        original_final,
+        index=False,
+        encoding="utf-8-sig"
+    )
 
-print(
-    website_scores
-)
+    print("\nFinal score file saved:")
+    print(original_final)
 
-# --------------------------------------------------------------
-# Update interests file
-# --------------------------------------------------------------
+    website_scores = DATA / "scores.csv"
 
-interests_file = DATA / "interests.csv.gz"
+    if not original_final.exists():
 
-all_data.to_csv(
-    interests_file,
-    index=False,
-    compression="gzip"
-)
+        raise RuntimeError(
+            "SAFETY STOP: Original final CSV was not created."
+        )
 
-# --------------------------------------------------------------
-# Update timestamp
-# --------------------------------------------------------------
+    shutil.copy2(
+        original_final,
+        website_scores
+    )
 
-latest = max(
-    register["publishedDate"]
-    for register in registers
-)
-last_update = DATA / "last_update.txt"
+    print(
+        "\nWebsite scores updated successfully:"
+    )
 
-last_update.write_text(
+    print(
+        website_scores
+    )
+
+    # --------------------------------------------------------------
+    # Update interests file
+    # --------------------------------------------------------------
+
+    interests_file = DATA / "interests.csv.gz"
+
+    all_data.to_csv(
+        interests_file,
+        index=False,
+        compression="gzip"
+    )
+
+    print(
+        "\nInterests file updated:"
+    )
+
+    print(
+        interests_file
+    )
+
+    # --------------------------------------------------------------
+    # Update timestamp
+    # --------------------------------------------------------------
+
+    latest = max(
+        register["publishedDate"]
+        for register in registers
+    )
+
+    last_update = DATA / "last_update.txt"
+
+    last_update.write_text(
         "Latest Parliament register: "
         + latest
         + "\n"
@@ -548,29 +559,30 @@ last_update.write_text(
         encoding="utf-8"
     )
 
-print("\n" + "=" * 70)
-print("AUTOMATIC UPDATE COMPLETE")
-print("=" * 70)
+    print("\n" + "=" * 70)
+    print("AUTOMATIC UPDATE COMPLETE")
+    print("=" * 70)
 
-print(
-    "Registers processed:",
-    len(registers)
-)
+    print(
+        "Registers processed:",
+        len(registers)
+    )
 
-print(
-    "Latest register:",
-    latest
-)
+    print(
+        "Latest register:",
+        latest
+    )
 
-print(
-    "MPs scored:",
-    len(final)
-)
+    print(
+        "MPs scored:",
+        len(final)
+    )
 
-print(
-    "Website scores:",
-    website_scores
-)
+    print(
+        "Website scores:",
+        website_scores
+    )
+
 
 if __name__ == "__main__":
     main()
