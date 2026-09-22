@@ -21,11 +21,10 @@ import matplotlib.pyplot as plt
 
 START_DATE = "2024-07-01"
 
-DESKTOP = Path.home() / "Desktop"
-BASE_FOLDER = DESKTOP / "UK MP Financial Integrity"
-RAW_FOLDER = BASE_FOLDER / "Raw Registers"
-EXTRACTED_FOLDER = BASE_FOLDER / "Extracted Registers"
-RESULTS_FOLDER = BASE_FOLDER / "Results"
+BASE_FOLDER = Path(__file__).resolve().parent
+RAW_FOLDER = BASE_FOLDER / "data" / "Raw Registers"
+EXTRACTED_FOLDER = BASE_FOLDER / "data" / "Extracted Registers"
+RESULTS_FOLDER = BASE_FOLDER / "data"
 
 MEMBERS_API = "https://members-api.parliament.uk/api/Members/Search"
 REGISTERS_API = "https://interests-api.parliament.uk/api/v2/Registers"
