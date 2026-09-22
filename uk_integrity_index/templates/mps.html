@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}MPs · UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><p class="eyebrow">HOUSE OF COMMONS</p><h1>MPs</h1><p>Search and filter the dataset produced by the UK MP's Financial Independence Index methodology.</p></div></section>
+<section class="container">
+<form class="filters">
+<input name="q" value="{{ q }}" placeholder="Name or party…">
+<select name="party"><option value="">All parties</option>{% for p in parties %}<option {% if p==selected_party %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+<select name="category"><option value="">Any interest category</option>{% for c in categories %}<option {% if c==selected_category %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+<select name="sort"><option value="name" {% if selected_sort=='name' %}selected{% endif %}>Name</option><option value="score_high" {% if selected_sort=='score_high' %}selected{% endif %}>Score: high to low</option><option value="score_low" {% if selected_sort=='score_low' %}selected{% endif %}>Score: low to high</option></select>
+<button>Apply</button>
+</form>
+<div class="result-count">{{ mps|length }} MPs shown</div>
+<div class="table-wrap"><table><thead><tr><th>Rank</th><th>MP</th><th>Party</th><th>Score</th><th>Grade</th><th></th></tr></thead><tbody>
+{% for mp in mps %}<tr><td><strong class="rank-number">{{ mp['Rank'] }}</strong></td><td><div class="mp-cell"><img class="mp-photo-small" src="{{ url_for('mp_photo', mnis_id=mp['Mnis Id']|int) }}" alt="Official portrait of {{ mp['Member'] }}"><a class="name" href="{{ url_for('mp_profile', mnis_id=mp['Mnis Id']) }}">{{ mp['Member'] }}</a></div></td><td>{{ mp['Party'] }}</td><td><span class="score-pill">{{ '%.1f'|format(mp['Final Score']) }}</span></td><td><span class="grade">{{ mp['Grade'] }}</span></td><td><a class="arrow" href="{{ url_for('mp_profile', mnis_id=mp['Mnis Id']) }}">→</a></td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+{% endblock %}
