@@ -474,7 +474,7 @@ def main():
     # Save the original engine's normal output
     # --------------------------------------------------------------
 
-    # Save the final score file directly.
+# Save the final score file directly.
 # This avoids relying on the original save_results() function,
 # whose argument structure is different.
 
@@ -491,30 +491,25 @@ final.to_csv(
 print("\nFinal score file saved:")
 print(original_final)
 
-    website_scores = DATA / "scores.csv"
+website_scores = DATA / "scores.csv"
 
-    if not original_final.exists():
-
-        raise RuntimeError(
-            "SAFETY STOP: Original final CSV was not created."
-        )
-
-    # --------------------------------------------------------------
-    # Only NOW replace website scores.csv
-    # --------------------------------------------------------------
-
-    shutil.copy2(
-        original_final,
-        website_scores
+if not original_final.exists():
+    raise RuntimeError(
+        "SAFETY STOP: Original final CSV was not created."
     )
 
-    print(
-        "\nWebsite scores updated successfully:"
-    )
+shutil.copy2(
+    original_final,
+    website_scores
+)
 
-    print(
-        website_scores
-    )
+print(
+    "\nWebsite scores updated successfully:"
+)
+
+print(
+    website_scores
+)
 
     # --------------------------------------------------------------
     # Update interests file
