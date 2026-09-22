@@ -5,3 +5,10 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
+
+  - type: cron
+    name: update-uk-mp-financial-independence-index
+    runtime: python
+    schedule: "0 6 * * *"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python update_data.py
