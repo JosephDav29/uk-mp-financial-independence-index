@@ -196,30 +196,9 @@ def build_mp_population(register_data):
 
     population = {}
 
+    
     # --------------------------------------------------------------
-    # 1. MPs at the beginning of the current Parliament
-    # --------------------------------------------------------------
-
-    historical_records = get_historical_mps(
-        "2024-07-10"
-    )
-
-    for record in historical_records:
-
-        member = extract_member_details(record)
-
-        member_id = member["Mnis Id"]
-
-        if member_id is not None:
-            population[str(member_id)] = member
-
-    print(
-        "\nMPs from July 2024 historical population:",
-        len(population)
-    )
-
-    # --------------------------------------------------------------
-    # 2. Current Commons MPs
+    # 1. Current Commons MPs
     # --------------------------------------------------------------
 
     current_records = get_current_mps()
