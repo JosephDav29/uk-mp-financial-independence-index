@@ -497,7 +497,6 @@ if not original_final.exists():
     raise RuntimeError(
         "SAFETY STOP: Original final CSV was not created."
     )
-
 shutil.copy2(
     original_final,
     website_scores
@@ -511,27 +510,26 @@ print(
     website_scores
 )
 
-    # --------------------------------------------------------------
-    # Update interests file
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Update interests file
+# --------------------------------------------------------------
 
-    interests_file = DATA / "interests.csv.gz"
+interests_file = DATA / "interests.csv.gz"
 
-    all_data.to_csv(
-        interests_file,
-        index=False,
-        compression="gzip"
-    )
+all_data.to_csv(
+    interests_file,
+    index=False,
+    compression="gzip"
+)
 
-    # --------------------------------------------------------------
-    # Update timestamp
-    # --------------------------------------------------------------
+# --------------------------------------------------------------
+# Update timestamp
+# --------------------------------------------------------------
 
-    latest = max(
-        register["publishedDate"]
-        for register in registers
-    )
-
+latest = max(
+    register["publishedDate"]
+    for register in registers
+)
     last_update = DATA / "last_update.txt"
 
     last_update.write_text(
