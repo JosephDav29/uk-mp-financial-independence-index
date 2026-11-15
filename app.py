@@ -135,8 +135,9 @@ if 'Register Date' not in interests.columns:
     )
 
 if '_Register_Date' in interests.columns:
-    interests['Register Date'] = interests['Register Date'].replace(
-        '', interests['_Register_Date'].fillna('').astype(str)
+    interests['Register Date'] = interests['Register Date'].where(
+        interests['Register Date'].ne(''),
+        interests['_Register_Date'].fillna('').astype(str)
     )
 
 if 'Interest Description' not in interests.columns:
@@ -147,8 +148,8 @@ if 'Interest Description' not in interests.columns:
 if 'Summary' in interests.columns:
     interests['Interest Description'] = interests[
         'Interest Description'
-    ].replace(
-        '',
+    ].where(
+        interests['Interest Description'].ne(''),
         interests['Summary'].fillna('').astype(str)
     )
 
