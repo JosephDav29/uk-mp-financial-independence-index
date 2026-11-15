@@ -100,35 +100,29 @@ def get_current_mps():
 
 
 
-def get_historical_mps(date):
-    """Get historical Commons MPs who were serving on the specified date."""
 
-    print("\nGetting historical Commons MPs for", date)
+def get_historical_mps(date):
+    """
+    Get all Commons MPs who were members on or after
+    the specified date, including former MPs.
+    """
+
+    print("\nGetting historical Commons MPs from", date)
 
     records = get_all_member_pages(
-        "/SearchHistorical",
+        "/Search",
         {
-            "dateToSearchFor": f"{date}T00:00:00",
+            "MembershipInDateRange.WasMemberOnOrAfter": (
+                f"{date}T00:00:00"
+            ),
+            "MembershipInDateRange.WasMemberOfHouse": 1,
         },
     )
 
-    commons_members = []
+    print("Commons MPs found:", len(records))
 
-    for record in records:
-        if not isinstance(record, dict):
-            continue
+    return records
 
-        member_data = record.get("value", record)
-
-        membership = member_data.get("latestHouseMembership") or {}
-        house = membership.get("house")
-
-        if house is not None and str(house) == "1":
-            commons_members.append(record)
-
-    print("Historical Commons MPs found:", len(commons_members))
-
-    return commons_members
 
 
 def extract_member_details(record):
