@@ -13,12 +13,85 @@ scores = pd.read_csv(DATA / 'scores.csv')
 interests = pd.read_csv(gzip.open(DATA / 'interests.csv.gz', 'rt', encoding='utf-8'), low_memory=False)
 
 # Clean common display fields
+
+scores = pd.read_csv(DATA / 'scores.csv')
+
+interests = pd.read_csv(
+    gzip.open(DATA / 'interests.csv.gz', 'rt', encoding='utf-8'),
+    low_memory=False
+)
+
+# Clean common display fields
 scores['Member'] = scores['Member'].fillna('Unknown')
 scores['Party'] = scores['Party'].fillna('Unknown')
+
 interests['Member'] = interests['Member'].fillna('Unknown')
 interests['Category'] = interests['Category'].fillna('Other')
+
+# Find the latest version of a register field
+import re
+
+def latest_version_column(df, field):
+    columns = []
+
+    for column in df.columns:
+        match = re.match(
+            r'^Version\s*(\d+)\s+' + re.escape(field) + r'$',
+            str(column),
+            flags=re.IGNORECASE
+        )
+
+        if match:
+            columns.append((int(match.group(1)), column))
+
+    columns.sort(reverse=True)
+
+    if not columns:
+        return pd.Series('', index=df.index)
+
+    result = pd.Series('', index=df.index, dtype='object')
+
+    for version, column in columns:
+        values = df[column].fillna('').astype(str)
+        result = result.mask(
+            result.eq('') & values.ne(''),
+            values
+        )
+
+    return result
+
+# Create the simplified columns used by the website
+if 'Register Date' not in interests.columns:
+    interests['Register Date'] = latest_version_column(
+        interests, 'Register Date'
+    )
+
+    if '_Register_Date' in interests.columns:
+        interests['Register Date'] = interests['Register Date'].replace(
+            '', interests['_Register_Date']
+        )
+
+if 'Interest Description' not in interests.columns:
+    interests['Interest Description'] = latest_version_column(
+        interests, 'Summary'
+    )
+
+    if 'Summary' in interests.columns:
+        interests['Interest Description'] = interests[
+            'Interest Description'
+        ].replace('', interests['Summary'].fillna(''))
+
+if 'Interest ID' not in interests.columns:
+    interests['Interest ID'] = interests.get('Id', '')
+
+if 'Register ID' not in interests.columns:
+    interests['Register ID'] = interests.get('_Register_ID', '')
+
 interests['Register Date'] = interests['Register Date'].fillna('')
-interests['Interest Description'] = interests['Interest Description'].fillna('')
+interests['Interest Description'] = interests[
+    'Interest Description'
+].fillna('')
+
 
 CATEGORY_ORDER = [
     'Donations', 'Employment', 'Gifts', 'Overseas', 'Property',
