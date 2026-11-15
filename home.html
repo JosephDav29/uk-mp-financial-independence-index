@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="eyebrow">HOUSE OF COMMONS · JULY 2024 ONWARDS</p>
+    <h1>UK Integrity<br><span>Index</span></h1>
+    <p class="lead">Explore MPs' registered financial interests and the scores produced by the published methodology.</p>
+    <form class="search" action="{{ url_for('mps') }}">
+      <input name="q" placeholder="Search an MP or party…" aria-label="Search MPs">
+      <button>Search MPs</button>
+    </form>
+  </div>
+<p class="muted">{{ last_update|e|replace("\n", " · ") }}</p>
+</section>
+<section class="container stats">
+  <div><strong>{{ total_mps }}</strong><span>MPs analysed</span></div>
+  <div><strong>{{ '{:,}'.format(total_interests) }}</strong><span>register entries</span></div>
+  <div><strong>{{ register_count }}</strong><span>register editions</span></div>
+  <div><strong>{{ rectifications }}</strong><span>rectifications recorded</span></div>
+</section>
+<section class="container section-grid">
+  <div class="card large"><p class="eyebrow">EXPLORE</p><h2>Search the MPs</h2><p>Find an MP, inspect their score breakdown, and explore the registered interests contributing to the calculation.</p><a class="button" href="{{ url_for('mps') }}">Browse MPs →</a> <a class="button secondary-button" href="{{ url_for('rankings') }}">View rankings →</a></div>
+  <div class="card"><p class="eyebrow">METHODOLOGY</p><h2>How scores work</h2><p>The score starts at 100 and applies the published category, concentration and transparency penalties.</p><a class="text-link" href="{{ url_for('methodology') }}">Read methodology →</a></div>
+  <div class="card"><p class="eyebrow">SOURCES</p><h2>Follow the data</h2><p>Each interest is tied to a Parliament interest ID and register edition so the underlying entry can be checked.</p><a class="text-link" href="{{ url_for('about') }}">About the data →</a></div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Rankings · UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><p class="eyebrow">HOUSE OF COMMONS</p><h1>Rankings</h1><p>MPs ordered by the score produced by the UK MP's Financial Independence Index methodology.</p></div></section>
+<section class="container">
+<div class="ranking-note">Rankings are calculated from the uploaded dataset. Higher scores appear first; identical scores are ordered by lower raw penalty and then alphabetically.</div>
+<div class="result-count">{{ rankings|length }} MPs ranked</div>
+<div class="table-wrap"><table><thead><tr><th>Rank</th><th>MP</th><th>Party</th><th>Score</th><th>Grade</th><th></th></tr></thead><tbody>
+{% for mp in rankings %}<tr><td><strong class="rank-number">{{ loop.index }}</strong></td><td><div class="mp-cell"><img class="mp-photo-small" src="{{ url_for('mp_photo', mnis_id=mp['Mnis Id']|int) }}" alt="Official portrait of {{ mp['Member'] }}"><a class="name" href="{{ url_for('mp_profile', mnis_id=mp['Mnis Id']) }}">{{ mp['Member'] }}</a></div></td><td>{{ mp['Party'] }}</td><td><span class="score-pill">{{ '%.1f'|format(mp['Final Score']) }}</span></td><td><span class="grade">{{ mp['Grade'] }}</span></td><td><a class="arrow" href="{{ url_for('mp_profile', mnis_id=mp['Mnis Id']) }}">→</a></td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+{% endblock %}

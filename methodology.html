@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Methodology · UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><p class="eyebrow">METHODOLOGY</p><h1>How the score works</h1><p>The score is a transparent calculation applied to the Parliamentary Register data. It is an output of this methodology, not a judgement about an MP's character or intent.</p></div></section>
+<section class="container prose">
+<div class="card">
+<h2>1. Starting score</h2>
+<p>Every MP starts at <strong>100</strong>. Raw penalties are calculated from registered interests and the scoring rules below. The final score is constrained to the 0–100 range.</p>
+
+<h2>2. Maximum category deductions</h2>
+<table class="method-table">
+<tr><td>Donations &amp; political support</td><td>−20</td></tr>
+<tr><td>Employment &amp; earnings</td><td>−20</td></tr>
+<tr><td>Gifts &amp; hospitality</td><td>−15</td></tr>
+<tr><td>Overseas visits</td><td>−10</td></tr>
+<tr><td>Property</td><td>−10</td></tr>
+<tr><td>Shareholdings</td><td>−15</td></tr>
+<tr><td>Family interests</td><td>−5</td></tr>
+<tr><td>Miscellaneous interests</td><td>−5</td></tr>
+<tr><td>Concentration</td><td>−10</td></tr>
+<tr><td>Transparency</td><td>−5</td></tr>
+</table>
+
+<h2>3. Cumulative treatment of register entries</h2>
+<p>The same interest is not intended to receive the same full penalty every time it is republished. Each interest is classified according to its appearance in the register:</p>
+<ul>
+<li><strong>NEW:</strong> 100% of the calculated penalty.</li>
+<li><strong>UPDATED:</strong> 25% of the calculated penalty.</li>
+<li><strong>UNCHANGED:</strong> 0% additional penalty.</li>
+</ul>
+<p>This means the scoring system focuses more heavily on newly disclosed or materially changed interests than on simple republication of an existing entry.</p>
+
+<h2>4. Concentration</h2>
+<p>A separate concentration penalty is applied when one interest or source represents a large share of an MP's raw interest penalty:</p>
+<table class="method-table">
+<tr><td>Below 40%</td><td>0</td></tr>
+<tr><td>40–60%</td><td>−3</td></tr>
+<tr><td>60–75%</td><td>−6</td></tr>
+<tr><td>75–90%</td><td>−8</td></tr>
+<tr><td>90% or more</td><td>−10</td></tr>
+</table>
+
+<h2>5. Transparency</h2>
+<p>A transparency penalty of <strong>−5</strong> is applied where the dataset records a rectification. Rectifications are identified from the Parliamentary register data; the site does not independently determine whether an entry was correctly or incorrectly rectified.</p>
+
+<h2>6. Calibration</h2>
+<p>The current dataset uses a continuous calibration of the raw penalty:</p>
+<p><strong>Final Score = 100 / (1 + Total Raw Penalty / K)</strong></p>
+<p>Here, <strong>K</strong> is the median positive raw penalty in the scoring population. This avoids an arbitrary hard cut-off between very high and very low raw penalties while retaining the ordering produced by the underlying methodology.</p>
+
+<h2>7. Revised grade system</h2>
+<p>The grade boundaries below are the current boundaries used by the website. The lowest passing grade is <strong>D− (40–44)</strong>; any score below 40 is <strong>F</strong>.</p>
+<table class="method-table">
+<tr><td>A+</td><td>95–100</td></tr>
+<tr><td>A</td><td>90–94</td></tr>
+<tr><td>A−</td><td>85–89</td></tr>
+<tr><td>B+</td><td>80–84</td></tr>
+<tr><td>B</td><td>75–79</td></tr>
+<tr><td>B−</td><td>70–74</td></tr>
+<tr><td>C+</td><td>65–69</td></tr>
+<tr><td>C</td><td>60–64</td></tr>
+<tr><td>C−</td><td>55–59</td></tr>
+<tr><td>D+</td><td>50–54</td></tr>
+<tr><td>D</td><td>45–49</td></tr>
+<tr><td>D−</td><td>40–44</td></tr>
+<tr><td>F</td><td>Below 40</td></tr>
+</table>
+
+<h2>8. Ranking</h2>
+<p>The rankings page orders MPs by <strong>Final Score</strong> from highest to lowest. Ties are then broken by lower <strong>Total Raw Penalty</strong>, followed alphabetically by Member name. The ranking is therefore a direct output of the scoring methodology and dataset, rather than an independent assessment.</p>
+
+<h2>9. Inspiration and related methodology</h2>
+<p>The UK MP's Financial Independence Index is an independent project with its own UK-specific scoring rules. Its development was inspired in part by the <a href="https://integrityindex.us/" target="_blank" rel="noopener">US Political Integrity Index</a>, particularly the idea of making political-financial information more accessible through a transparent, reproducible scoring methodology.</p>
+<p>The US index and this project are separate systems. The UK index adapts its approach to the structure and categories of the UK Parliament's Register of Members' Financial Interests rather than reproducing the US methodology.</p>
+
+<h2>10. Automatic updates</h2>
+<p>The website is designed to check the UK Parliament Register API automatically. When Parliament publishes a new Register, the update process downloads the published register data, rebuilds the interest-level calculations and recalculates every MP's score using the current methodology.</p>
+<p>The automated process runs once per day and records the latest register processed. Parliament's Register API provides published register versions and downloadable CSV data, while the Parliament website publishes current and previous register versions publicly.</p>
+
+<h2>11. Data source</h2>
+<p>The underlying interests come from the UK Parliament Register of Members' Financial Interests. The website provides the register entries and their calculated treatment so that users can inspect the data behind each result.</p>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ mp['Member'] }} · UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="profile-hero"><div class="container"><div class="profile-heading"><img class="mp-photo-large" src="{{ url_for('mp_photo', mnis_id=mp['Mnis Id']|int) }}" alt="Official portrait of {{ mp['Member'] }}"><div><a class="back" href="{{ url_for('mps') }}">← All MPs</a><p class="eyebrow">HOUSE OF COMMONS</p><h1>{{ mp['Member'] }}</h1><p class="party">{{ mp['Party'] }} · Rank {{ rank }}</p></div></div><div class="score-card"><div><span class="score-number">{{ '%.1f'|format(mp['Final Score']) }}</span><span class="score-label">UK MP's Financial Independence Index score</span></div><span class="big-grade">{{ mp['Grade'] }}</span></div></div></section>
+<section class="container profile-grid">
+<div>
+  <div class="card"><div class="section-title"><div><p class="eyebrow">BREAKDOWN</p><h2>Score calculation</h2></div><span class="muted">Raw penalty: {{ '%.1f'|format(mp['Total Raw Penalty']) }}</span></div>
+  {% for name, value in breakdown %}<div class="break-row"><span>{{ name }}</span><strong>{{ '%.1f'|format(value) }}</strong></div>{% endfor %}
+  <div class="formula"><span>Final score</span><strong>{{ '%.1f'|format(mp['Final Score']) }}</strong></div></div>
+  <div class="card"><p class="eyebrow">REGISTER ENTRIES</p><h2>Interests</h2><p class="muted">{{ '{:,}'.format(total_entries) }} register entries are present for this MP in the uploaded dataset. The page shows the 150 most recent entries.</p>
+  <div class="interest-list">{% for x in entries %}<article class="interest"><div class="interest-top"><span class="tag">{{ x['Category'] }}</span><span>{{ x['Register Date'] }}</span></div><h3>{{ x['Original Category'] }}</h3><p>{{ x['Interest Description'][:650] }}{% if x['Interest Description']|length > 650 %}…{% endif %}</p><div class="interest-bottom"><span>{{ x['Status'] }} · applied penalty {{ '%.1f'|format(x['Applied Cumulative Penalty']) }}</span>{% if x['Interest ID']==x['Interest ID'] %}<a target="_blank" href="https://interests-api.parliament.uk/api/v1/Interests/{{ x['Interest ID'] }}">Parliament API ↗</a>{% endif %}</div></article>{% endfor %}</div></div>
+</div>
+<aside>
+  <div class="card"><p class="eyebrow">CATEGORIES</p>{% for name,value in category_breakdown %}<div class="mini-row"><span>{{ name }}</span><strong>{{ '%.1f'|format(value) }}</strong></div>{% endfor %}</div>
+  <div class="card"><p class="eyebrow">TRANSPARENCY</p><div class="big-stat">{{ mp['Rectification Count'] }}</div><p>Rectifications recorded in the dataset.</p></div>
+</aside>
+</section>
+{% endblock %}

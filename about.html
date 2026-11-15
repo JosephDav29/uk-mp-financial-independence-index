@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}About · UK MP's Financial Independence Index{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><p class="eyebrow">ABOUT</p><h1>About the project</h1><p>A public-facing way to explore Members' registered financial interests and the output of a transparent, user-defined scoring methodology.</p></div></section>
+<section class="container prose"><div class="card"><h2>Data</h2><p>This version of the website was generated from the two CSV datasets supplied for the project: the MP-level scoring file and the interest-level scoring file. The underlying register information originates from the UK Parliament's Register of Members' Financial Interests.</p><p><a class="text-link" target="_blank" href="https://members.parliament.uk/members/commons/interests/publications">View Parliament's register archive →</a></p><h2>Audit trail</h2><p>Individual interest entries retain their Parliament Interest ID and register date. Profile pages link individual entries to the Parliament Interests API where available.</p><h2>Scope</h2><p>The uploaded dataset covers MPs and register entries from July 2024 onwards. This website reflects the files supplied to it; rerunning your Python data pipeline and replacing the data files is how the site can be refreshed.</p></div></section>
+{% endblock %}
