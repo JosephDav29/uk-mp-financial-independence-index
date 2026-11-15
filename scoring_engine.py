@@ -1829,6 +1829,47 @@ def build_final_scores(scored, members):
             round(final[column].sum(), 2)
         )
 
+        # DIAGNOSTIC: investigate MPs receiving exactly 100
+    print("\n" + "=" * 70)
+    print("INVESTIGATING MPs WITH A SCORE OF 100")
+    print("=" * 70)
+
+    interest_counts = (
+        scored.groupby("Mnis Id")
+        .size()
+        .to_dict()
+    )
+
+    final["Interest Count"] = (
+        final["Mnis Id"]
+        .map(interest_counts)
+        .fillna(0)
+        .astype(int)
+    )
+
+    perfect_scores = final[
+        final["Final Score"] == 100
+    ]
+
+    print("MPs scoring 100:", len(perfect_scores))
+
+    print("\nTheir interest counts:")
+
+    print(
+        perfect_scores[
+            ["Member", "Party", "Interest Count"]
+        ].to_string(index=False)
+    )
+
+    print("\nMPs scoring 100 with no matched interests:")
+
+    print(
+        perfect_scores[
+            perfect_scores["Interest Count"] == 0
+        ][
+            ["Member", "Party"]
+        ].to_string(index=False)
+    )
     return final
 
 
