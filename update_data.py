@@ -352,6 +352,7 @@ def validate_results(final, all_data, scored, members):
         "Concentration Penalty",
         "Transparency Penalty",
         "Rectification Count",
+        "Land Penalty",
     ]
 
     missing = [
