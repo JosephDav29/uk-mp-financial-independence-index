@@ -1,3 +1,4 @@
+
 name: Update UK MP Financial Independence Index
 
 on:
@@ -22,18 +23,16 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        working-directory: uk_integrity_index
         run: pip install -r requirements.txt
 
       - name: Update MP data
-        working-directory: uk_integrity_index
         run: python update_data.py
 
       - name: Commit updated data
-        working-directory: uk_integrity_index
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add data/scores.csv data/interests.csv.gz data/last_update.txt
 
           if git diff --cached --quiet; then
