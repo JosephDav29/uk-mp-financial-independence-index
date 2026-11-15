@@ -125,8 +125,10 @@ def get_historical_mps(date):
 
 
 
+
 def extract_member_details(record):
     """Convert a Members API record into the scoring-engine format."""
+
     if not isinstance(record, dict):
         return None
 
@@ -156,9 +158,14 @@ def extract_member_details(record):
         or ""
     )
 
-    party = record.get("party") or record.get("Party") or ""
+    # Parliament stores the party inside latestParty.
+    party = (
+        record.get("latestParty")
+        or record.get("party")
+        or record.get("Party")
+        or ""
+    )
 
-    # Some API responses may represent party as an object.
     if isinstance(party, dict):
         party = (
             party.get("name")
@@ -172,6 +179,7 @@ def extract_member_details(record):
         "Member": str(name).strip(),
         "Party": str(party).strip(),
     }
+
 
 
 def add_member(population, record):
