@@ -1,4 +1,4 @@
-Latest Parliament register: 2026-11-09
-Registers processed: 49
+Latest Parliament register: 2026-11-23
+Registers processed: 50
 MPs scored: 656
-Updated automatically: 2026-11-23T17:49:14.133015+00:00
+Updated automatically: 2026-11-24T17:25:29.099142+00:00
